@@ -89,4 +89,47 @@ const deleteBarbie = (req, res) => {
     })
 };
 
-export { getAllBarbies, getBarbiesByld, createBarbie,deleteBarbie };
+//Update
+const updateBarbie = (req, res) => {
+    //Ter logica do put update
+    const id = parseInt(req.params.id);
+    const { nome, profissao, anoLancamento } = req.body;
+
+    //Renomear id
+    if(isNaN(idParaEditar)){
+        return res.status(400).json({
+            sucess: false,
+            message: "O id deve ser válido!"
+        })
+    }
+
+    //Verificar se a Barbie com Id: idParaEditar existe
+    const barbieExiste = barbies.find(b => b.id === idParaEditar);
+    if(!barbieExiste){
+        return res.status(404).json({
+            sucess: false,
+            message: "A Barbie com o id " + idParaEditar + "é inexistente"
+        })
+    }
+
+    //
+    const barbiesAtualizadas = barbies.map(b => b.id === idParaEditar ? {
+        ...b,
+        ...(nome && { nome }),
+        ...(profissao &&  { profissao }),
+        ...(anoLancamento &&  { anoLancamento })
+    }
+        :b
+    )
+
+    //Atualizar o Array
+    barbies.splice(0, barbies.length, ...barbiesAtualizadas);
+    const barbieEditada = barbies.find(b => b.id === idParaEditar);
+    res.status(200).json({
+        success: true,
+        message: "Dados atualizados com sucesso da Barbie",
+        b: barbieExiste
+    })
+}
+
+export { getAllBarbies, getBarbiesByld, createBarbie, deleteBarbie, updateBarbie };
